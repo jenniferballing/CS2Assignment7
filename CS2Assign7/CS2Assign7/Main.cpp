@@ -29,16 +29,45 @@ int main()
 	AddFriend(input);
     AddFriend('n');
     AddFriend('n');
-    AddFriend('n');
-    AddFriend('n');
     RemoveFriend(input);
 
 	return 0;
 }
 
-void menu()
+void menu(char i)
 {
+    char input;
     cout<<"***Network of My Friends***"<<endl;
+    cout<<"A: Add a Friend"<<endl;
+    cout<<"R: Remove a Friend by ID Number"<<endl;
+    cout<<"M: Modify a Friend's Information by ID Number"<<endl;
+    cout<<"S:Search Interests"<<endl;
+    cout<<"D:Display \"myNetwork.dat\" Database Information"<<endl;
+    cout<<"L: List the Oldest and the Youngest Friends' Information"<<endl;
+    cout<<"E: Exit"<<endl;
+
+    cin>>input;
+    if(input=='a' || input == 'A')AddFriend(i);
+    else if(input=='r' || input == 'R') RemoveFriend(i);
+    //else if(input=='m' || input == 'M') ModifyFriend(i);
+    //else if(input=='s' || input == 'S') SearchFriend(i);
+    //else if(input=='d' || input == 'D') DisplayFriend(i);
+    //else if(input=='l' || input == 'L') ListFriend(i);
+    else if(input=='e' || input == 'E')
+    {
+        exit(0);
+    }
+    else
+    {
+        cout<<input<<" isn't one of the menu options, \nPlease choose from the menu: \n"<<endl;
+        cout<<"***Network of My Friends***"<<endl;
+    cout<<"A: Add a Friend"<<endl;
+    cout<<"R: Remove a Friend by ID Number"<<endl;
+    cout<<"M: Modify a Friend's Information by ID Number"<<endl;
+    cout<<"S:Search Interests"<<endl;
+    cout<<"D:Display \"myNetwork.dat\" Database Information"<<endl;
+    cout<<"L: List the Oldest and the Youngest Friends\'"<<endl;
+    }
 }
 
 void AddFriend(char i)
@@ -173,8 +202,8 @@ void RemoveFriend(char i)
     fout.open("myNetwork.dat", ios::in | ios::out | ios::binary | ios::ate);
     cout<<"Which is chosen: "<<endl;
     cin>>chosen;
-
-    for(int i=chosen; i<fileSize("myNetwork.dat"); i++)
+    int numIndex = fileSize("myNetwork.dat")/132;
+    for(int i=chosen; i<numIndex; i++)
     {
         fout.seekg(i*sizeof(nf), ios::beg);
         fout.read((char *)&storage, sizeof(storage));
@@ -182,8 +211,9 @@ void RemoveFriend(char i)
         fout.write((char*)&storage, sizeof(storage));
     }
 
-    fout.seekp(-sizeof(nf), ios::end);
+    fout.seekp(-132, ios::end);
     fout.write((char*)&empty, sizeof(empty));
+    
 
     fout.close();
 
