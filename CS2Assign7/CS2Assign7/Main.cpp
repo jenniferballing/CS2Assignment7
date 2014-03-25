@@ -18,6 +18,7 @@ void AddFriend(char i);
 void RemoveFriend( char i);
 int fileSize(const char* fileName);
 char fileType();
+void menu();
 
 
 
@@ -31,6 +32,10 @@ int main()
 	return 0;
 }
 
+void menu()
+{
+    cout<<"***Network of My Friends***"<<endl;
+}
 
 void AddFriend(char i)
 {
@@ -90,7 +95,7 @@ void AddFriend(char i)
     fstream fout;
     if(i=='y' || i=='Y')
     {
-        fout.close();
+        //fout.close();
         fout.open("myNetwork.dat", ios:: in | ios:: out | ios::binary | ios::trunc);
     }
     else
@@ -154,7 +159,7 @@ void RemoveFriend(char i)
     fstream fout("myNetwork.dat");
     if(i=='y' || i=='Y')
     {
-        fout.close();
+        //fout.close();
         fout.open("myNetwork.dat", ios:: in | ios:: out | ios::binary | ios::trunc);
     }
     else
@@ -184,8 +189,14 @@ void RemoveFriend(char i)
     for(long l =starting; l<sizeFile; l+=132)
     {
         fout.seekg(l, ios::beg);
+        streampos a = fout.tellg();
+        //cout<<(int)fout.tellg()<<end;
         fout.read((char*) &newFriend, sizeof(newFriend));
-        fout.seekp(-l, ios::cur);
+        streampos b = fout.tellg();
+        //cout<<fout.tellg()<<end;
+        fout.seekp(l-132, ios::beg);
+        int pos2=fout.tellp();
+        cout<<pos2<<endl;
         fout.write((char*)&newFriend, sizeof(newFriend));
     }
     cout<<"size:"<<sizeFile<<endl;
