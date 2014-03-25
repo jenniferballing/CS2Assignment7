@@ -27,6 +27,10 @@ int main()
     char input;
     input=fileType();
 	AddFriend(input);
+    AddFriend('n');
+    AddFriend('n');
+    AddFriend('n');
+    AddFriend('n');
     RemoveFriend(input);
 
 	return 0;
@@ -155,7 +159,36 @@ char fileType()
 }
 void RemoveFriend(char i)
 {
-    int id;
+    long chosen;
+    long offset= sizeof(FRIEND)*2;
+    FRIEND storage;
+    FRIEND nf;
+    FRIEND empty;
+    memcpy(empty.name, "Empty", 5);
+    memcpy(empty.interests, "Empty", 5);
+    empty.age= 0;
+
+    fstream fout;
+    
+    fout.open("myNetwork.dat", ios::in | ios::out | ios::binary | ios::ate);
+    cout<<"Which is chosen: "<<endl;
+    cin>>chosen;
+
+    for(int i=chosen; i<fileSize("myNetwork.dat"); i++)
+    {
+        fout.seekg(i*sizeof(nf), ios::beg);
+        fout.read((char *)&storage, sizeof(storage));
+        fout.seekp(-offset, ios::cur);
+        fout.write((char*)&storage, sizeof(storage));
+    }
+
+    fout.seekp(-sizeof(nf), ios::end);
+    fout.write((char*)&empty, sizeof(empty));
+
+    fout.close();
+
+
+    /*int id;
     fstream fout("myNetwork.dat");
     if(i=='y' || i=='Y')
     {
@@ -202,5 +235,5 @@ void RemoveFriend(char i)
     cout<<"size:"<<sizeFile<<endl;
     fout.seekp(-132L, ios::cur);
     fout.write((char*)&emptyFriend, sizeof(emptyFriend));
-    fout.close();
+    fout.close();*/
 }
