@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <sys/stat.h>
+#include <string.h>
 
 using namespace std;
 
@@ -14,7 +15,7 @@ typedef struct Friend
 }FRIEND;
 
 void AddFriend(char i);
-void RemoveFriend();
+void RemoveFriend( char i);
 int fileSize(const char* fileName);
 char fileType();
 
@@ -25,12 +26,10 @@ int main()
     char input;
     input=fileType();
 	AddFriend(input);
+    RemoveFriend(input);
 
-	
-    system("pause");
 	return 0;
 }
-
 
 
 void AddFriend(char i)
@@ -91,6 +90,7 @@ void AddFriend(char i)
     fstream fout;
     if(i=='y' || i=='Y')
     {
+        fout.close();
         fout.open("myNetwork.dat", ios:: in | ios:: out | ios::binary | ios::trunc);
     }
     else
@@ -115,7 +115,7 @@ int fileSize(const char* fileName)
 	fin.seekg(0L, ios::end);
 	return (int)fin.tellg();
 }
-char filetype()
+char fileType()
 {
     fstream fout("myNetwork.dat");
     char input;
@@ -148,7 +148,48 @@ char filetype()
         }
     }return input;
 }
-/*void RemoveFriend(char input)
+void RemoveFriend(char i)
 {
-
-}*/
+    int id;
+    fstream fout("myNetwork.dat");
+    if(i=='y' || i=='Y')
+    {
+        fout.close();
+        fout.open("myNetwork.dat", ios:: in | ios:: out | ios::binary | ios::trunc);
+    }
+    else
+    {
+        fout.open("myNetwork.dat", ios:: in | ios:: out | ios::binary | ios::ate);
+    }
+    cout<<"What is the ID number of the friend you would like to delete?"<<endl;
+    cin>>id;
+    long sizeFile= fileSize("myNetwork.dat");
+	int sizeObj= sizeof(FRIEND);
+	int index =sizeFile/sizeObj;
+    long starting = sizeObj*id;
+    while(id>index || id<0)
+    {
+        cout<<"This selection is out of range. Please enter the ID of the friend you would like to delete."<<endl;
+        cin>>id;
+    }
+    //the one after the deleted
+    
+    
+    FRIEND newFriend, emptyFriend;
+    memcpy(emptyFriend.name, "Empty", 5);
+    memcpy(emptyFriend.interests, "Empty", 5);
+    emptyFriend.age= 0;
+    long num=sizeof(FRIEND);
+    cout<<"size:"<<sizeFile<<endl;
+    for(long l =starting; l<sizeFile; l+=132)
+    {
+        fout.seekg(l, ios::beg);
+        fout.read((char*) &newFriend, sizeof(newFriend));
+        fout.seekp(-l, ios::cur);
+        fout.write((char*)&newFriend, sizeof(newFriend));
+    }
+    cout<<"size:"<<sizeFile<<endl;
+    fout.seekp(-132L, ios::cur);
+    fout.write((char*)&emptyFriend, sizeof(emptyFriend));
+    fout.close();
+}
