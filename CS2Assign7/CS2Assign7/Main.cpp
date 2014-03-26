@@ -129,6 +129,8 @@ void AddFriend()
 		cout<<"Your friend's name is too long. Please try again with fewer characters."<<endl;
 		getline(cin, newInterests);
 	}
+    cin.clear();
+	cin.sync();
 	cout<<"What are the interests of your friend?"<<endl;
 	getline(cin, newInterests);
     if(newInterests.size()>99)
