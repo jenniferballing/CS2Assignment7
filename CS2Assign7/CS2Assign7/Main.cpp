@@ -58,10 +58,7 @@ void menu()
         else if(input=='s' || input == 'S') SearchFriend();
         else if(input=='d' || input == 'D') DisplayFriend();
         else if(input=='l' || input == 'L') ListFriend();
-        else if(input=='e' || input == 'E')
-        {
-            exit(0);
-        }
+        else if(input=='e' || input == 'E') return;
         else
         {
             cout<<input<<" isn't one of the menu options, \nPlease choose from the menu: \n"<<endl;
